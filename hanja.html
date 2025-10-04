@@ -1,0 +1,284 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <script src="./hanja_maker_2.js"></script>
+    <script src="https://chonggi-tokhu.github.io/files/kin_choice/new/ColourgreyShorterCSSJS-0.0.1.js"></script>
+    <link rel="stylesheet" href="https://chonggi-tokhu.github.io/files/kin_choice/new/ColourgreyShorter.css">
+    <style>
+        .work-outer .tools {
+            display: flex;
+        }
+
+        .work-outer .tools-item {
+            margin-left: 0.5rem;
+            margin-right: 0.5rem;
+            padding: 0.1rem;
+            border: 1px solid #000000;
+        }
+
+        .work-outer .tools-item.selected-tool {
+            border: 2px solid #2e48ba;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="work-outer">
+        <div class="tools-menu">
+            <div class="tools">
+                <div class="tools-item">
+                    <button class="action-btn" data-cmd="start_stroke">획 시작</button>
+                </div>
+                <div class="tools-item">
+                    <button class="action-btn" data-cmd="add_moving">출발점 찍기</button>
+                </div>
+                <!-- <div class="tools-item">
+                        <button class="action-btn" data-cmd="start_stroke add_line">선 추가(자동으로 획 시작)</button>
+                    </div>
+                    <div class="tools-item">
+                        <button class="action-btn" data-cmd="add_moving add_line">선 추가(자동으로 출발점 찍힘)</button>
+                    </div> -->
+                <div class="tools-item">
+                    <button class="action-btn" data-cmd="add_line">선 추가</button>
+                </div>
+                <div class="tools-item">
+                    <button class="action-btn" data-cmd="add_curve">곡선 추가</button>
+                </div>
+                <div class="tools-item">
+                    <button class="action-btn" data-cmd="end_stroke">획 끝내기</button>
+                </div>
+                <div class="tools-item">
+                    <button class="action-btn" data-cmd="clear">모두 지우기</button>
+                </div>
+                <div class="tools-item">
+                    <button class="action-btn" data-cmd="apply_to_svg" onclick="hanjaMaker0.apply_to_svg();">SVG에
+                        적용</button>
+                </div>
+                <div class="tools-item">
+                    <button class="action-btn" data-cmd="make_mp4">MP4화</button>
+                </div>
+                <div class="tools-item">
+                    <input type="checkbox" id="clicktodraw_check">
+                    <label for="clicktodraw_check">클릭해서 그리기(옵션)</label>
+                </div>
+            </div>
+            <div class="tools">
+                <div class="tools-item">
+                    <button class="action-btn-2" data-cmd-type="line">선 그리기(속성)</button>
+                </div>
+                <div class="tools-item">
+                    <button class="action-btn-2" data-cmd-type="curve">곡선 그리기(속성)</button>
+                </div>
+                <div class="tools-item">
+                    <button class="action-btn-2" data-cmd-type="stop">획 끊기</button>
+                </div>
+                <div class="tools-item">
+                    <button class="action-btn-2" data-cmd-type="off">모든 도구 사용 중지</button>
+                </div>
+            </div>
+            <div class="tools">
+                <div class="tools-item" style="display: flex;">
+                    <input type="text" onchange="strokeobj.stroke_colour=this.value" placeholder="획 색깔">
+                    <input type="text" onchange="strokeobj.stroke_width=this.value" placeholder="획 두께">
+                    <input type="text" onchange="strokeobj.bgstroke_width=this.value" placeholder="획 배경 두께">
+                    <button onclick="hanjaMaker0.set_stroke(strokeobj);">획 설정</button>
+                </div>
+                <div class="tools-item">
+                    <input type="number" id="removeidx" placeholder="삭제할 획 인덱스">
+                    <button class="action-btn-2"
+                        onclick="hanjaMaker0.remove_stroke(parseInt(document.getElementById('removeidx').value));">획
+                        삭제</button>
+                </div>
+            </div>
+        </div>
+        <div id="work" class="work"></div>
+        <div style="display:flex;">
+            <div>
+                <input type="checkbox" id="marking_check">
+                <label for="marking_check">좌표찍을때 라벨 붙이기(옵션)</label>
+            </div>
+            <div>
+                <input type="checkbox" id="auto_check" checked>
+                <label for="auto_check">아래 도구 쓸 때 자동으로 SVG에 적용</label>
+            </div>
+            <div>
+                <button onclick="hanjaMaker0.svgelparent.focus()">작업 바로가기</button>
+            </div>
+        </div>
+    </div>
+    <script>
+        var ColourgreyShorterJS = typeof window['ColourgreyShorterJS'] === 'object' && window['ColourgreyShorterJS'] !== null ? window['ColourgreyShorterJS'] : { ColourgreyShorterCSS: function () { return false; } };
+        var cgrshorter = new ColourgreyShorterJS.ColourgreyShorterCSS(false);
+        var hanja_maker = typeof window['hanja_maker'] === 'function' ? window['hanja_maker'] : class { };
+        var hanjaMaker0 = new hanja_maker('work');
+        hanjaMaker0.add_key_listeners();
+        var selected_tool = false;
+        var selected_tool2 = false;
+        var lastxy = false;
+        var currxy = [];
+        var auto = auto_check?.checked || false;
+        var spacekeypressed = false;
+        var strokeobj = {
+            stroke_colour: '#202020',
+            bgstroke_width: /* 21.6 */14,
+            stroke_width: /* 14.4 */ 12,
+        };
+        document.querySelectorAll('.action-btn').forEach((el, idx, par) => {
+            el.addEventListener("click", (ev) => {
+                var cmd = el.getAttribute("data-cmd");
+                selected_tool = cmd;
+                document.querySelector('.tools-item.selected-tool')?.classList?.remove('selected-tool');
+                el.parentElement.classList.add("selected-tool");
+                hanjaMaker0.select_tool(cmd);
+            });
+        });
+        function listener0(ev) {
+            if (spacekeypressed) {
+                listener1(ev);
+            }
+            currxy.push(ev.offsetX + ' ' + ev.offsetY);
+            if (currxy.length >= 2) {
+                hanjaMaker0.add_line_easy(currxy[0], currxy[1], lastxy);
+                if (!spacekeypressed) {
+                    lastxy = ev.offsetX + ' ' + ev.offsetY;
+                }
+                currxy = [];
+            }
+        }
+        function listener2(ev) {
+            if (spacekeypressed) {
+                listener1(ev);
+            }
+            currxy.push(ev.offsetX + ' ' + ev.offsetY);
+            console.log(currxy);
+            if (currxy.length >= 3) {
+                console.log('3!');
+                hanjaMaker0.strokes.pop();
+                hanjaMaker0.strokes.push('');
+                hanjaMaker0.add_curve_easy(currxy[0], currxy[1], currxy[2], currxy[0]);
+                if (!spacekeypressed) {
+                    lastxy = ev.offsetX + ' ' + ev.offsetY;
+                }
+                currxy = [];
+            }
+        }
+        //start_stroke(80 80);add_line(80 80,200 200);add_line(200 200,100 60);apply_to_svg();
+        function listener1(ev) {
+            hanjaMaker0?.start_stroke(ev.offsetX + ' ' + ev.offsetY ? ev.offsetX + ' ' + ev.offsetY : '0 0');
+            lastxy = ev.offsetX + ' ' + ev.offsetY;
+        }
+        document.querySelectorAll('.action-btn-2').forEach((el, idx, par) => {
+            el.addEventListener("click", (ev) => {
+                var cmd = el.getAttribute("data-cmd-type");
+                selected_tool2 = cmd;
+                document.querySelector('.tools-item.selected-tool')?.classList?.remove('selected-tool');
+                el.parentElement.classList.add("selected-tool");
+                /* if (cmd === 'line') {
+                    hanjaMaker0?.svgelparent?.removeEventListener("click", listener1);
+                    hanjaMaker0?.svgelparent?.removeEventListener("click", listener2);
+                    hanjaMaker0?.svgelparent?.addEventListener("click", listener0);
+                } else if (cmd === 'stop') {
+                    hanjaMaker0?.svgelparent?.removeEventListener("click", listener0);
+                    hanjaMaker0?.svgelparent?.removeEventListener("click", listener2);
+                    hanjaMaker0?.svgelparent?.addEventListener("click", listener1);
+                } else if (cmd === 'off') {
+                    hanjaMaker0?.svgelparent?.removeEventListener("click", listener0);
+                    hanjaMaker0?.svgelparent?.removeEventListener("click", listener1);
+                    hanjaMaker0?.svgelparent?.removeEventListener("click", listener2);
+                } else if (cmd === 'curve') {
+                    hanjaMaker0?.svgelparent?.removeEventListener("click", listener1);
+                    hanjaMaker0?.svgelparent?.removeEventListener("click", listener0);
+                    hanjaMaker0?.svgelparent?.addEventListener("click", listener2);
+                }
+                if (auto) {
+                    console.log('...');
+                    hanjaMaker0.apply_to_svg();
+                } */
+
+                if (cmd === 'line') {
+                    //hanjaMaker0?.svgelparent?.removeEventListener("click", listener1);
+                    hanjaMaker0?.svgelparent?.removeEventListener("click", listener2);
+                    hanjaMaker0?.svgelparent?.removeEventListener("click", listener0);
+                    hanjaMaker0?.svgelparent?.addEventListener("click", listener0);
+                } else if (cmd === 'stop') {
+                    hanjaMaker0?.svgelparent?.removeEventListener("click", listener1);
+                    hanjaMaker0?.svgelparent?.addEventListener("click", listener1);
+                } else if (cmd === 'off') {
+                    hanjaMaker0?.svgelparent?.removeEventListener("click", listener0);
+                    hanjaMaker0?.svgelparent?.removeEventListener("click", listener1);
+                    hanjaMaker0?.svgelparent?.removeEventListener("click", listener2);
+                } else if (cmd === 'curve') {
+                    //hanjaMaker0?.svgelparent?.removeEventListener("click", listener1);
+                    hanjaMaker0?.svgelparent?.removeEventListener("click", listener0);
+                    hanjaMaker0?.svgelparent?.removeEventListener("click", listener2);
+                    hanjaMaker0?.svgelparent?.addEventListener("click", listener2);
+                }
+                if (auto) {
+                    hanjaMaker0.apply_to_svg();
+                }
+            });
+        });
+        var clicktodraw_check = document.querySelector('#clicktodraw_check');
+        clicktodraw_check?.addEventListener("change", (ev) => {
+            hanjaMaker0.set_clicktodraw(clicktodraw_check.checked);
+            if (!hanjaMaker0.clicktodraw) {
+                selected_tool = false;
+                selected_tool2 = false;
+                document.querySelector('.tools-item.selected-tool')?.classList?.remove('selected-tool');
+            }
+        });
+        var marking_check = document.querySelector('#marking_check');
+        marking_check.addEventListener("change", (ev) => {
+            hanjaMaker0.set_marking(marking_check.checked);
+        });
+        var auto_check = document.querySelector('#auto_check');
+        auto_check.addEventListener("change", (ev) => {
+            auto = auto_check.checked;
+        });
+        auto = auto_check.checked;
+        window.addEventListener("DOMContentLoaded", (ev) => {
+            document.querySelectorAll('.tools').forEach((el, idx, par) => {
+                el.addEventListener("keydown", (ev) => {
+                    if (ev.key === ' ') {
+                        console.log('aaa');
+                        spacekeypressed = true;
+                        ev.preventDefault();
+                    }
+                });
+            });
+            document.querySelectorAll('.tools').forEach((el, idx, par) => {
+                el.addEventListener("keyup", (ev) => {
+                    if (ev.key === ' ') {
+                        spacekeypressed = false;
+                        ev.preventDefault();
+                    }
+                });
+            });
+            hanjaMaker0.add_key_listeners();
+            /* document.querySelector('#work>div').addEventListener('keypress', (ev) => {
+                if (ev.key === 'a') {
+                    document.querySelector(`[data-cmd="start_stroke"]`).click();
+                } else if (ev.key === 's') {
+                    document.querySelector(`[data-cmd="add_moving"]`).click();
+                } else if (ev.key === 'd') {
+                    document.querySelector(`[data-cmd="add_line"]`).click();
+                } else if (ev.key === 'f') {
+                    document.querySelector(`[data-cmd="add_curve"]`).click();
+                } else if (ev.key === 'g') {
+                    document.querySelector(`[data-cmd="end_stroke"]`).click();
+                } else if (ev.key === 'h') {
+                    document.querySelector(`[data-cmd="clear"]`).click();
+                } else if (ev.key === 'j') {
+                    document.querySelector(`[data-cmd="apply_to_svg"]`).click();
+                }
+            }) */
+            cgrshorter?.styleAll();
+        });
+    </script>
+</body>
+
+</html>
