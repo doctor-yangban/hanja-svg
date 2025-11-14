@@ -93,7 +93,7 @@
         var ctx = mycanv.getContext("2d");
         var mysvg = document.querySelector("svg.mysvg");
         function drawImage(){
-            ctx.drawImage(mysvg);
+            ctx.drawImage(mysvg,0,0);
             return ctx;
         }
         function convert({dur,fps}={dur:5,fps:20}){
