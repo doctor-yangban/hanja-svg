@@ -12,6 +12,7 @@
     <canvas id="mycanv" width="360" height="360"></canvas>
     <script>
         var mycanv = document.querySelector('canvas#mycanv');
+        var recorder=null;
         var gif=new GIF({
             workers:4,
             quality:10,
@@ -33,19 +34,39 @@
         async function convert({dur,fps}={dur:6,fps:25}){
             var duration=dur*1000;
             var frames = fps * dur;
-            for (var i = 0;i<frames;i++){
+            recorder = new MediaRecorder(mycanv.captureStream(fps));
+            recorder.ondataavailable = function (ev) {
+                if (ev.data && ev.data.size) {
+                    console.log(ev.data);
+                    var frameUrl = URL.createObjectURL(new Blob([data]));
+                    var anImg= new Image(mycanv.width,mycanv.height);
+                    anImg.src=frameUrl;
+                    gif.addFrame(anImg);
+                }
+            }
+            /* for (var i = 0;i<frames;i++){
                 await wait(1000 / fps).then(()=>{
                     var stream = drawImage().captureStream(25);
-                    gif.addFrame(stream.canvas.getContext("2d", {willReadFrequently:true}));
+                    gif.addFrame();
                 });
-            }
-            await wait(1000).then(()=>{
+            } */
+            /* await wait(1000).then(()=>{
                 gif.on('finished', function(blob) {
                     console.log(URL.createObjectURL(blob));
                     window.open(URL.createObjectURL(blob));
                 });
                 gif.render();
+            }); */
+            gif.on('finished', function(blob) {
+                console.log(URL.createObjectURL(blob));
+                window.open(URL.createObjectURL(blob));
             });
+            recorder.onstop=(ev)=>{
+                gif.render();
+            }
+            setTimeout(()=>{
+                recorder.stop();
+            },duration);
         }
     </script>
 </body>
