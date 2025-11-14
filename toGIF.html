@@ -29,7 +29,7 @@
             var duration=dur*1000;
             var frames = fps * dur;
             var intervalId = setInterval(()=>{ 
-                GIF.addFrame(drawImage());
+                gif.addFrame(drawImage());
             }, 1000 / fps);
             setTimeout(()=>{
                 clearInterval(intervalId);
