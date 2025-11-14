@@ -81,7 +81,7 @@
     </g>
     <canvas id="mycanv" width="360" height="360"></canvas>
     <script>
-        var mycanv = document.querySelector("canvas#mycanv");
+        var mycanv = Array.from(document.getElementsByTagName("canvas")).find(el=>el.id==='mycanv');
         var gif=new GIF({
             workers:2,
             quality:10,
