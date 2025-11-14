@@ -27,21 +27,25 @@
             ctx.drawImage(mysvg,0,0);
             return ctx;
         }
-        function convert({dur,fps}={dur:6,fps:25}){
+        function wait(delayInMS) {
+            return new Promise((resolve) => setTimeout(resolve, delayInMS));
+        }
+        async function convert({dur,fps}={dur:6,fps:25}){
             var duration=dur*1000;
             var frames = fps * dur;
-            var intervalId = setInterval(()=>{ 
-                gif.addFrame(drawImage());
-            }, 1000 / fps);
-            setTimeout(()=>{
-                    console.log('finished');
+            for (var i = 0;i<frames;i++){
+                await wait(1000 / fps).then(()=>{
+                    gif.addFrame(drawImage());
+                });
+            }
+            await wait(1000).then(()=>{
                 clearInterval(intervalId);
                 gif.on('finished', function(blob) {
                     console.log(URL.createObjectURL(blob));
                     window.open(URL.createObjectURL(blob));
                 });
                 gif.render();
-            },duration+500);
+            });
         }
     </script>
 </body>
