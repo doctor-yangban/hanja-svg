@@ -31,10 +31,7 @@
         function wait(delayInMS) {
             return new Promise((resolve) => setTimeout(resolve, delayInMS));
         }
-        function drawFrame(){
-            requestAnimationFrame(()=>{drawImage()});
-        }
-        async function convert({dur,fps}={dur:6,fps:25}){
+        function convert({dur,fps}={dur:6,fps:25}){
             var duration=dur*1000;
             var frames = fps * dur;
             recorder = new MediaRecorder(mycanv.captureStream(fps));
@@ -47,11 +44,13 @@
                     gif.addFrame(anImg);
                 }
             }
-            for (var i = 0;i<frames;i++){
+            drawImage();
+            /* for (var i = 0;i<frames;i++){
                 await wait(1000 / fps).then(()=>{
-                    drawFrame();
+                    var stream = drawImage().captureStream(25);
+                    gif.addFrame();
                 });
-            }
+            } */
             /* await wait(1000).then(()=>{
                 gif.on('finished', function(blob) {
                     console.log(URL.createObjectURL(blob));
