@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>to gif</title>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/1.19.0/TweenMax.min.js"></script>
-    <script src="./SVG2GIF.js"></script>
+    <script src="./gif/gif.js"></script>
 </head>
 <body><svg xmlns="http://www.w3.org/2000/svg" width="360" height="360" class="mysvg">
 
@@ -79,7 +79,37 @@
                 keyTimes="0;0.9;1" repeatCount="indefinite" values="28;28;0"></animate>
         </path>
     </g>
-
+    <canvas id="mycanv" width="360" height="360"></canvas>
+    <script>
+        var gif=new GIF({
+            workers:2,
+            quality:10,
+            background:'#fff',
+            width:mycanv.width,
+            height:mycanv.height,
+        });
+        var mycanv = document.querySelector("canvas#mycanv");
+        var ctx = mycanv.getContext("2d");
+        var mysvg = document.querySelector("svg.mysvg");
+        function drawImage(){
+            ctx.drawImage(mysvg);
+            return ctx;
+        }
+        function convert({dur,fps}={dur:5,fps:20}){
+            var duration=dur*1000;
+            var frames = fps * dur;
+            var intervalId = setInterval(()=>{ 
+                GIF.addFrame(drawImage());
+            }, 1000 / fps);
+            setTimeout(()=>{
+                clearInterval(intervalId);
+                gif.on('finished', function(blob) {
+                    window.open(URL.createObjectURL(blob));
+                });
+                gif.render();
+            });
+        }
+    </script>
 </svg>
 </body>
 </html>
