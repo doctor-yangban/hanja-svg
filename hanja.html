@@ -314,6 +314,11 @@
             var alertWinElPr = document.createElement("div");
             alertWinElPr.innerHTML=helpHTML;
             var alertWinEl = document.body.appendChild(alertWinElPr);
+            var alertWinCloseBtn=alertWinEl.appendChild(document.createElement("button"));
+            alertWinCloseBtn.innerHTML=`&times;`;
+            alertWinCloseBtn.addEventListener("click",(ev)=>{
+                alertWinEl.remove();
+            });
             alertWinEl.style.display="block"; 
             alertWinEl.style.width="400px"; 
             alertWinEl.style.background="#90ee90c0"; 
@@ -323,11 +328,6 @@
             alertWinEl.style.boxShadow="0.8rem 0.8rem 0.8rem 0.8rem #222222, -0.8rem 0.8rem 0.8rem 0.8rem #222222, 0.8rem -0.8rem 0.8rem 0.8rem #222222, -0.8rem -0.8rem 0.8rem 0.8rem #222222";
             alertWinEl.style.position="fixed"; 
             alertWinEl.style.zIndex="5000";
-            var alertWinCloseBtn=alertWinEl.appendChild(document.createElement("button"));
-            alertWinCloseBtn.innerHTML=`&times;`;
-            alertWinCloseBtn.addEventListener("click",(ev)=>{
-                alertWinEl.remove();
-            });
         }
         window.addEventListener("DOMContentLoaded", (ev) => {
             document.querySelectorAll('.tools').forEach((el, idx, par) => {
