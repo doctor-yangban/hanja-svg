@@ -108,6 +108,9 @@
             <div>
                 <button onclick="hanjaMaker0.svgelparent.focus()">작업 바로가기</button>
             </div>
+            <div>
+                <button onclick="getSVGCode();">svg 코드 보기</button>
+            </div>
         </div>
     </div>
     <script>
@@ -240,6 +243,13 @@
             auto = auto_check.checked;
         });
         auto = auto_check.checked;
+        function getSVGCode(){
+            var newSVG=document.createElement("svg");
+            newSVG.innerHTML=hanjaMaker0.svgel.innerHTML;
+            newSVG.querySelector(".points").remove();
+            newSVG.querySelector(".bg").remove();
+            window.prompt('복사 ㄱ',newSVG.innerHTML);
+        }
         window.addEventListener("DOMContentLoaded", (ev) => {
             document.querySelectorAll('.tools').forEach((el, idx, par) => {
                 el.addEventListener("keydown", (ev) => {

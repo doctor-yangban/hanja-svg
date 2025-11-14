@@ -96,7 +96,7 @@ var hanja_maker = class {
         <path stroke="#AAA" stroke-linecap="round" stroke-opacity="1.0" stroke-width="${this.bgstroke_width}" d="@@strokes-path@@" />
         @@strokes-list@@
     </g>
-    <g>@@marks@@</g>
+    <g class="points">@@marks@@</g>
 </svg>`;
         this.svgel = this.svgelparent.appendChild(svgel);
         svgel = null;
@@ -539,7 +539,7 @@ var hanja_maker = class {
         <path stroke="#AAA" stroke-linecap="round" stroke-opacity="1.0" stroke-width="${this.bgstroke_width}" d="@@strokes-path@@" />
         @@strokes-list@@
     </g>
-    <g>@@marks@@</g>
+    <g class="points">@@marks@@</g>
 </svg>`;
     }
     remove_stroke(idx) {
