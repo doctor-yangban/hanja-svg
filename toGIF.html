@@ -32,6 +32,7 @@
                 gif.addFrame(drawImage());
             }, 1000 / fps);
             setTimeout(()=>{
+                    console.log('finished');
                 clearInterval(intervalId);
                 gif.on('finished', function(blob) {
                     window.open(URL.createObjectURL(blob));
