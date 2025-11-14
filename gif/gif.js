@@ -331,7 +331,7 @@
     return GIF;
 
   }).call(this);
-
+  globalThis['GIF']=GIF;
   module.exports = GIF;
 
 }).call(this);
