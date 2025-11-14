@@ -31,7 +31,7 @@
         function wait(delayInMS) {
             return new Promise((resolve) => setTimeout(resolve, delayInMS));
         }
-        async function convert({dur,fps}={dur:6,fps:25}){
+        function convert({dur,fps}={dur:6,fps:25}){
             var duration=dur*1000;
             var frames = fps * dur;
             recorder = new MediaRecorder(mycanv.captureStream(fps));
