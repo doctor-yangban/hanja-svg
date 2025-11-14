@@ -79,9 +79,10 @@
                 keyTimes="0;0.9;1" repeatCount="indefinite" values="28;28;0"></animate>
         </path>
     </g>
+</svg>
     <canvas id="mycanv" width="360" height="360"></canvas>
     <script>
-        var mycanv = Array.from(document.getElementsByTagName("canvas")).find(el=>el.id==='mycanv');
+        var mycanv = document.querySelector('canvas#mycanv');
         var gif=new GIF({
             workers:2,
             quality:10,
@@ -110,6 +111,5 @@
             });
         }
     </script>
-</svg>
 </body>
 </html>
