@@ -583,7 +583,14 @@ var hanja_maker = class {
             //keyS
             if (this.pressed_keys.includes(0x55)) {
                 //keyU
-                this.selected_marks = [];
+                if (this.pressed_keys.includes(0x54)){
+                    //keyT
+                    this.selected_marks=[];
+                }
+                var foundIndex= this.selected_marks.findIndex((val) => val?.id == Number(ev.target.getAttribute("marker-id")));
+                if (foundIndex>=0){
+                    this.selected_marks.splice(foundIndex,1);
+                }
             } else {
                 var themarker = this.marks.find((val) => val?.id == Number(ev.target.getAttribute("marker-id")));
                 if (themarker) {
