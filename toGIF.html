@@ -91,7 +91,7 @@
             height:mycanv.height,
         });
         var ctx = mycanv.getContext("2d");
-        var mysvg = document.querySelector("svg.mysvg");
+        var mysvg = Array.from(document.getElementsByTagName("svg")).find(el=>el.classList.contains('mysvg'));
         function drawImage(){
             ctx.drawImage(mysvg,0,0);
             return ctx;
