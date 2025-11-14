@@ -313,21 +313,22 @@
             </div>`;
             var alertWinElPr = document.createElement("div");
             alertWinElPr.innerHTML=helpHTML;
-            var alertWinEl = document.body.appendChild(alertWinElPr);
+            var alertWinElPar=document.body.appendChild(document.createElement("div"));
+            alertWinElPar.style.top=`20px`; 
+            alertWinElPar.style.left=`calc((100vw - 400px) / 2)`; 
+            alertWinElPar.style.boxShadow="0.8rem 0.8rem 0.8rem 0.8rem #222222, -0.8rem 0.8rem 0.8rem 0.8rem #222222, 0.8rem -0.8rem 0.8rem 0.8rem #222222, -0.8rem -0.8rem 0.8rem 0.8rem #222222";
+            alertWinElPar.style.position="fixed"; 
+            alertWinElPar.style.zIndex="5000";
+            var alertWinEl = alertWinElPar.appendChild(alertWinElPr);
             var alertWinCloseBtn=alertWinEl.appendChild(document.createElement("button"));
             alertWinCloseBtn.innerHTML=`&times;`;
-            alertWinCloseBtn.addEventListener("click",(ev)=>{
-                alertWinEl.remove();
-            });
             alertWinEl.style.display="block"; 
             alertWinEl.style.width="400px"; 
             alertWinEl.style.background="#90ee90c0"; 
-            alertWinEl.style.top=`20px`; 
             alertWinEl.style.overflowY="scroll";
-            alertWinEl.style.left=`calc((100vw - 400px) / 2)`; 
-            alertWinEl.style.boxShadow="0.8rem 0.8rem 0.8rem 0.8rem #222222, -0.8rem 0.8rem 0.8rem 0.8rem #222222, 0.8rem -0.8rem 0.8rem 0.8rem #222222, -0.8rem -0.8rem 0.8rem 0.8rem #222222";
-            alertWinEl.style.position="fixed"; 
-            alertWinEl.style.zIndex="5000";
+            alertWinCloseBtn.addEventListener("click",(ev)=>{
+                alertWinElPar.remove();
+            });
         }
         window.addEventListener("DOMContentLoaded", (ev) => {
             document.querySelectorAll('.tools').forEach((el, idx, par) => {
