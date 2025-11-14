@@ -25,7 +25,7 @@
         var mysvg = document.querySelector('img#myimg');
         function drawImage(){
             ctx.drawImage(mysvg,0,0);
-            return ctx;
+            return canvas;
         }
         function wait(delayInMS) {
             return new Promise((resolve) => setTimeout(resolve, delayInMS));
@@ -35,7 +35,8 @@
             var frames = fps * dur;
             for (var i = 0;i<frames;i++){
                 await wait(1000 / fps).then(()=>{
-                    gif.addFrame(drawImage());
+                    var stream = drawImage().captureStream(25);
+                    gif.addFrame(stream.canvas);
                 });
             }
             await wait(1000).then(()=>{
