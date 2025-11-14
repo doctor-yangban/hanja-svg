@@ -36,7 +36,7 @@
             for (var i = 0;i<frames;i++){
                 await wait(1000 / fps).then(()=>{
                     var stream = drawImage().captureStream(25);
-                    gif.addFrame(stream.canvas);
+                    gif.addFrame(stream.canvas.getContext("2d", {willReadFrequently:true}));
                 });
             }
             await wait(1000).then(()=>{
