@@ -35,6 +35,7 @@
                     console.log('finished');
                 clearInterval(intervalId);
                 gif.on('finished', function(blob) {
+                    console.log('finished');
                     window.open(URL.createObjectURL(blob));
                 });
                 gif.render();
