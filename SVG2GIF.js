@@ -525,5 +525,5 @@ function dropdownChange(){
 
 
 console.log("::SVG2GIF Loaded::")
-TweenMax.delayedCall(1, initConverter);
+//TweenMax.delayedCall(1, initConverter);
 })()
