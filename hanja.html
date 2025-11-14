@@ -111,6 +111,9 @@
             <div>
                 <button onclick="getSVGCode();">svg 코드 보기</button>
             </div>
+            <div>
+                <button onclick="showHelp();">도움말 보기</button>
+            </div>
         </div>
     </div>
     <script>
@@ -245,10 +248,84 @@
         auto = auto_check.checked;
         function getSVGCode(){
             var newSVG=document.createElement("svg");
+            newSVG.width=hanjaMaker0.svgel.width;
+            newSVG.height=hanjaMaker0.svgel.height;
             newSVG.innerHTML=hanjaMaker0.svgel.innerHTML;
             newSVG.querySelector(".points").remove();
             newSVG.querySelector(".bg").remove();
-            window.prompt('복사 ㄱ',newSVG.innerHTML);
+            window.prompt('복사 ㄱ',newSVG.outerHTML);
+        }
+        function showHelp(){
+            var helpHTML=`<div>
+                <h4><span>도움말</span></h4>
+                <p><span>pc버전에서 키보드 키와 마우스를 통해 그릴 수 있습니다.</span></p>
+                <p><span>먼저, 위의 메뉴의 버튼들은 &apos;SVG에 적용&apos; 버튼을 제외하고는 모두 무시하고, 아래쪽에서 &apos;좌표 찍을때 라벨 붙이기(옵션)&apos; 체크박스를 체크한 상태로, 만들 글자의 획이 시작하거나 끝나는 부분, 그리고 꼭지점, 베지어곡선의 세 제어점에 해당하는 위치에 마우스를 클릭해가며 점을 찍어주세요.</span></p>
+                <p><span>그리고, 다음 표에 따라 행동해주세요.</span></p>
+                <div>
+                    <table>
+                        <tr>
+                            <th>누를 키</th>
+                            <th>작동</th>
+                        </tr>
+                        <tr>
+                            <td>S</td>
+                            <td>해당 점을 선택상태에 둠</td>
+                        </tr>
+                        <tr>
+                            <td>U+S</td>
+                            <td>해당 점을 선택상태에서 해제</td>
+                        </tr>
+                        <tr>
+                            <td>B</td>
+                            <td>해당 점에서 획을 시작</td>
+                        </tr>
+                        <tr>
+                            <td>M</td>
+                            <td>해당 점으로 그리는 도구를 이동(L과 똑같이 작동하는데 지나간 자리에 선을 남기지 않는다고 보면 됨)</td>
+                        </tr>
+                        <tr>
+                            <td>L</td>
+                            <td>해당 점으로 선분을 이음</td>
+                        </tr>
+                        <tr>
+                            <td>C</td>
+                            <td>베지어곡선의 제어점</td>
+                        </tr>
+                        <tr>
+                            <td>Z</td>
+                            <td>획을 끝냄</td>
+                        </tr>
+                    </table>
+                </div>
+                <p><span>이상의 표를 갖고 그려주시면 됩니다.</span></p>
+                <p><span>예를 들어, (0,0)에서 (20,20)으로 간 뒤 (40, 0)으로 가는데 한획으로 이어지고, 다음 획으로 (20,20)에서 시작해 (20,80)으로 가는 획이 있는 글자(대문자 Y모양이 나올것입니다)를 그리고 싶다면,</span></p>
+                <p><span>&apos;좌표 찍을때 라벨 붙이기&apos; 옵션에 체크를 한 뒤, (0,0)에 마우스를 클릭해 라벨을 남깁니다. 그 다음으로 (20,20)에, (40,0)에, (20,80)에 똑같이 합니다.</span></p>
+                <p><span>다음으로, S키를 누른 상태에서, B키를 누른 상태에서, M키를 누른 상태에서 (0,0)에 표시했던 라벨을 클릭합니다. 그리고 L 키를 누른 상태에서 클릭합니다. (이때, 저 키들을 모두 동시에 누른 상태에서 할 필요는 없습니다. 애초부터 키 조합 자체가 2개 이상 있는 키, 이를테면 선택취소기능이 있는 U+S 키같은것을 제외하면 다 하나하나씩 눌러도 됩니다)</span></p>
+                <p><span>그리고 (20,20)에 표시했던 라벨을 S키를 누른 상태에서, L키를 누른 상태에서 클릭합니다.</span></p>
+                <p><span>다음으로 (40,0)에 표시했던 라벨을 S키를 누른 상태에서, L키를 누른 상태에서 클릭합니다. Z키를 누른 상태에서 클릭합니다. </span></p>
+                <p><span>(지금까지 따로 클릭했던 점들을 S키를 누른 상태에서 3점의 라벨을 다 클릭한 뒤,그 후 세 점들에 각각 B,M,L을, L을, L,Z를 눌러도 상관 없을것입니다.)</span></p>
+                <p><span>상단 메뉴 &apos;SVG에 적용&apos; 버튼을 누릅니다.</span></p>
+                <p><span>이제 (0,0),(20,20),(40,0)의 세 라벨 모두 각각 U와 S를 <span style="font-weight:bold;">동시에</span> 누른 상태에서 클릭합니다.</span></p>
+                <p><span>그리고 S키를 누른 상태에서, B키를 누른 상태에서,M키를 누른 상태에서, L키를 누른 상태에서 (20,20)의 라벨을 클릭합니다.</span></p>
+                <p><span>(20,80)에 표시한 라벨을 S키를 누른 상태에서, L키를 누른 상태에서, Z키를 누른 상태에서 클릭합니다.</span></p>
+                <p><span>SVG에 적용을 누릅니다.</span></p>
+                <p><span>완성입니다.</span></p>
+            </div>`;
+            var alertWinElPr = document.createElement("div");
+            var alertWinEl = document.body.appendChild(alertWinElPr);
+            alertWinEl.style.display="block"; 
+            alertWinEl.style.width="fit-content"; 
+            alertWinEl.style.background="#90ee9080"; 
+            alertWinEl.style.top=`calc((100vh - 400px) / 2)`; 
+            alertWinEl.style.left=`calc((100vw - 400px) / 2)`; 
+            alertWinEl.style.boxShadow="0.8rem 0.8rem 0.8rem 0.8rem #222222, -0.8rem 0.8rem 0.8rem 0.8rem #222222, 0.8rem -0.8rem 0.8rem 0.8rem #222222, -0.8rem -0.8rem 0.8rem 0.8rem #222222";
+            alertWinEl.style.position="fixed"; 
+            alertWinEl.style.zIndex="5000";
+            var alertWinCloseBtn=alertWinEl.appendChild(document.createElement("button"));
+            alertWinCloseBtn.innerHTML=`&times;`;
+            alertWinCloseBtn.addEventListener("click",(ev)=>{
+                alertWinEl.remove();
+            });
         }
         window.addEventListener("DOMContentLoaded", (ev) => {
             document.querySelectorAll('.tools').forEach((el, idx, par) => {
