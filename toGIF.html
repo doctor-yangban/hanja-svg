@@ -81,6 +81,7 @@
     </g>
     <canvas id="mycanv" width="360" height="360"></canvas>
     <script>
+        var mycanv = document.querySelector("canvas#mycanv");
         var gif=new GIF({
             workers:2,
             quality:10,
@@ -88,7 +89,6 @@
             width:mycanv.width,
             height:mycanv.height,
         });
-        var mycanv = document.querySelector("canvas#mycanv");
         var ctx = mycanv.getContext("2d");
         var mysvg = document.querySelector("svg.mysvg");
         function drawImage(){
